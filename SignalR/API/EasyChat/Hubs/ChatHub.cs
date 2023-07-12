@@ -17,7 +17,6 @@ namespace EasyChat.Hubs
         [AllowAnonymous]
         public override Task OnConnectedAsync()
         {
-            BigInteger.Parse("1111111111111111");
             var id = Context.ConnectionId;
             UserStore.Ids.Add(id);
             return base.OnConnectedAsync();

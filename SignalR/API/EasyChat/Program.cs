@@ -1,7 +1,11 @@
+using EasyChat;
 using EasyChat.Auth;
 using EasyChat.Hubs;
+using FreeScheduler;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.OpenApi.Models;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -49,8 +53,12 @@ builder.Services.AddSwaggerGen(options => {
 builder.Services.AddMyJWTBearerAuth();
 builder.Services.AddHttpContextAccessor();
 
-
 var app = builder.Build();
+
+// 定时任务
+var hub = app.Services.GetService<IHubContext<ChatHub>>();
+Scheduler scheduler = new Scheduler(new MyTaskHandler(hub));
+scheduler.AddTask("topic1", "body1", round: -1, 5);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
